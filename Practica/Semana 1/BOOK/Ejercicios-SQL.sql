@@ -44,10 +44,13 @@ WHERE b.occupation like '%ENGINEER%'
 SELECT count(1) llamadasTotales ,sum(a.productsold)ventasTotales 
 FROM dbo.calls a left join dbo.customers b on a.customerid=b.customerid
 --6)
-SELECT b.name nombre,count(1) CantLlamadas,max(duration) LLamadaMasLarga,MIN(duration) LlamadaMasCorta,AVG(duration) Promedio,SUM(productsold) CantVentas
+SELECT b.name AgentName,count(1) NCalls,max(duration) Longest,MIN(duration) Shortest,AVG(duration) AvgDuration,SUM(productsold) TotalSales
 FROM dbo.calls a left join dbo.agents b on a.agentid=b.agentid
-GROUP by b.name
+GROUP by b.name 
+order by 1 ASC
 --7)
-SELECT b.name nombre,count(1) CantLlamadas,max(duration) LLamadaMasLarga,MIN(duration) LlamadaMasCorta,AVG(duration) Promedio,SUM(productsold) CantVentas
-FROM dbo.calls a left join dbo.agents b on a.agentid=b.agentid
-GROUP by b.name
+SELECT a.name,SUM(CASE WHEN productsold = 0 THEN duration  ELSE 0   END)/SUM(CASE WHEN productsold = 0 THEN 1 ELSE 0   END)AS avgWhenNotSold ,
+SUM(CASE  WHEN productsold = 1 THEN duration ELSE 0 END)/SUM(CASE WHEN productsold = 1 THEN 1  ELSE 0   END) AS avgWhenSold
+FROM calls c JOIN agents a ON c.agentid = a.agentid
+GROUP BY a.name
+ORDER BY 1
