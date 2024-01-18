@@ -13,24 +13,34 @@ public_key='e5ff055ba880b19ec5ae79656137e397'
 hashed='06c2388163e38dfc888ae7ad5e0043ca'
 
 url=f'https://gateway.marvel.com:443/v1/public/characters?ts={ts}&apikey={public_key}&hash={hashed}'
+url2=f'https://gateway.marvel.com:443/v1/public/comics?orderBy=-onsaleDate&ts={ts}&apikey={public_key}&hash={hashed}'
 
-response= requests.get(url)
+response= requests.get(url2) 
 
 print(response)#si es una tipo get debe devolver 200 que es correcta 
-
+print(url2)#
 lista =[]
 
 if response.status_code==200:
-    response_json=json.loads(response.text)
-    personajes=(response_json['data']['results'])
-    
-    for i in personajes:
+   response_json=json.loads(response.text)
+   comics=response_json['data']['results']
+#    personajes=(response_json['data']['results'])
+#   for i in personajes:
+#        id=i["id"]
+#        nombre=i["name"]
+#        descripcion=i["description"]
+#        cant_comics=i["comics"]["available"]
+#        cant_series=i["series"]["available"]
+#        dic={"id":id,"nombre:":nombre,"descripcion":descripcion,"cant_comics":cant_comics,"cant_series":cant_series}
+#        lista.append(dic)
+#print(lista)
+#print(len(lista))
+    for i in comics:
         id=i["id"]
-        nombre=i["name"]
+        title=i["name"]
         descripcion=i["description"]
         cant_comics=i["comics"]["available"]
         cant_series=i["series"]["available"]
-        dic={"id":id,"nombre:":nombre,"descripcion":descripcion,"cant_comics":cant_comics,"cant_series":cant_series}
+        dic={"id":id,"title:":title,"descripcion":descripcion,"cant_comics":cant_comics,"cant_series":cant_series}
         lista.append(dic)
 print(lista)
-print(len(lista))
