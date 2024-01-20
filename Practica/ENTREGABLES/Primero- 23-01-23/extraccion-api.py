@@ -2,9 +2,11 @@ import requests
 import pandas as pd
 import json
 import datetime
-import key
+import keys
 from sqlalchemy import create_engine
 
+#CONEXION A REDSHIFT
+conn=create_engine(keys.redshift_conn)
 
 #DATOS PARA LA API
 date = datetime.date.today()
@@ -16,13 +18,12 @@ params = {'league': '39', 'season': year}
 
 headers = {
     'x-rapidapi-host': "v3.football.api-sports.io",
-    'x-rapidapi-key': key.api_key
+    'x-rapidapi-key': keys.api_key
 }
 
 #CONEXION Y EXTRACCION DE DATOS 
 try:
-    lista_liga=[]
-    lista_equipos=[]
+    lista_pos=[]
     respuesta = requests.get(url, params=params, headers=headers)
     # Verifica si la solicitud fue exitosa (código de estado 200)
     if respuesta.status_code == 200:
@@ -30,19 +31,34 @@ try:
         response_json = json.loads(respuesta.text)
         data_liga= response_json['response'][0]['league']['standings'][0]
         print(len(data_liga))#20 es el total de equipos de la liga - se trae la lista y sus estadisticas actualizadas (partidos ganados-empatados-perdidos-puntos y posicion)
+        #print(data_liga[0])
         for i in range(len(data_liga)):
-            #equipos
+            #--------------------------------------------------------
+            #EQUIPOS de la tabla
             id_eq=data_liga[i]["team"]["id"]
             name_eq=data_liga[i]["team"]["name"]
             logo_eq=data_liga[i]["team"]["logo"]
-            lista_equipos=lista_equipos.append()
-            #partidos
+            #POSICIONES DE LA LIGA
+            puesto=data_liga[i]["rank"]
+            puntos=data_liga[i]["points"]
+            part_jugados=data_liga[i]["all"]["played"]
+            part_ganados=data_liga[i]["all"]["win"]
+            part_empatados=data_liga[i]["all"]["draw"]
+            part_perdidos=data_liga[i]["all"]["lose"]
+            goles_favor=data_liga[i]["all"]["goals"]["for"]
+            goles_contra=data_liga[i]["all"]["goals"]["against"]
+            #FECHA DE ACTUALIZACION DE LA API
+            fecha_actualizacion=data_liga[i]["update"]
+            #--------------------------------------------------------
+            dicc_pos={"id_eq":id_eq,"name_eq":name_eq,"logo_eq":logo_eq,"puesto":puesto,"puntos":puntos,"part_jugados":part_jugados,"part_ganados":part_ganados,"part_empatados":part_empatados,
+                      "part_perdidos":part_perdidos,"goles_favor":goles_favor,"goles_contra":goles_contra,"fecha_actualizacion":fecha_actualizacion}
+            lista_pos.append(dicc_pos)
+            #fin del for
 
-            #df = pd.DataFrame(data)
+        df_posiciones = pd.DataFrame(lista_pos)
 
-    # Imprime el DataFrame
-        #print(df)
-
+        #Dataframe a redshift
+        df_posiciones.to_sql('mxxn13_coderhouse.tabla_posiciones_premier_league',conn,index=False,if_exists='replace')
     else:
         # Muestra un mensaje de error si la solicitud no fue exitosa
         print("Error en la solicitud. Código de estado:", respuesta.status_code)
