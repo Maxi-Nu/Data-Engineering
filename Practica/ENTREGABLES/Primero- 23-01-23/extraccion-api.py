@@ -65,7 +65,7 @@ try:
 
         #Dataframe a redshift
         try:
-            df_posiciones.to_sql('mxxn13_coderhouse.tabla_posiciones_premier_league',conn,index=False,if_exists='replace')
+            df_posiciones.to_sql('mxxn13_coderhouse.posiciones_premier_league',conn,index=False,if_exists='replace')
         except:
             print('Error en la carga de datos a Redshift.')
     else:
