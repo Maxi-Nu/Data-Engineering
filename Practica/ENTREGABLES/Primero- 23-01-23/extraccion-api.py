@@ -13,15 +13,21 @@ date = datetime.date.today()
 year = int(date.strftime("%Y"))-1
 print(f"Current Year -> {year}")
 
+#conexion a tabla de posiciones
 url = "https://v3.football.api-sports.io/standings"
-params = {'league': '39', 'season': year}
+#conexion a tabla de jugadores de cada equipos
+url2='https://v3.football.api-sports.io/players'
+
+params = {'league': '39', 'season': year} 
 
 headers = {
     'x-rapidapi-host': "v3.football.api-sports.io",
     'x-rapidapi-key': keys.api_key
 }
 
-#CONEXION Y EXTRACCION DE DATOS 
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#CONEXION Y EXTRACCION DE DATOS DE PRIMERA URL(DATOS DE POSICIONES)--------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 try:
     lista_pos=[]
     respuesta = requests.get(url, params=params, headers=headers)
@@ -58,11 +64,21 @@ try:
         df_posiciones = pd.DataFrame(lista_pos)
 
         #Dataframe a redshift
-        df_posiciones.to_sql('mxxn13_coderhouse.tabla_posiciones_premier_league',conn,index=False,if_exists='replace')
+        try:
+            df_posiciones.to_sql('mxxn13_coderhouse.tabla_posiciones_premier_league',conn,index=False,if_exists='replace')
+        except:
+            print('Error en la carga de datos a Redshift.')
     else:
         # Muestra un mensaje de error si la solicitud no fue exitosa
         print("Error en la solicitud. Código de estado:", respuesta.status_code)
-
+        
 except requests.exceptions.RequestException as e:
     # Muestra un mensaje si hay un error en la solicitud
     print("Error en la solicitud:", e)
+
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#CONEXION Y EXTRACCION DE DATOS DE LA SEGUNDA URL(DATOS DE JUGADORES)------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+#pendiente ...
