@@ -57,7 +57,7 @@ try:
             fecha_actualizacion=data_liga[i]["update"]
             #--------------------------------------------------------
             dicc_pos={"id_eq":id_eq,"name_eq":name_eq,"logo_eq":logo_eq,"puesto":puesto,"puntos":puntos,"part_jugados":part_jugados,"part_ganados":part_ganados,"part_empatados":part_empatados,
-                      "part_perdidos":part_perdidos,"goles_favor":goles_favor,"goles_contra":goles_contra,"fecha_actualizacion":fecha_actualizacion}
+                      "part_perdidos":part_perdidos,"goles_favor":goles_favor,"goles_contra":goles_contra,"fecha_actualizacion":fecha_actualizacion,'Fecha_ingesta':str(date)}
             lista_pos.append(dicc_pos)
             #fin del for
 
@@ -66,6 +66,7 @@ try:
         #Dataframe a redshift
         try:
             df_posiciones.to_sql('mxxn13_coderhouse.posiciones_premier_league',conn,index=False,if_exists='replace')
+            print('Carga completa correctamente.')
         except:
             print('Error en la carga de datos a Redshift.')
     else:
@@ -77,7 +78,7 @@ except requests.exceptions.RequestException as e:
     print("Error en la solicitud:", e)
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#CONEXION Y EXTRACCION DE DATOS DE LA SEGUNDA URL(DATOS DE JUGADORES)------------------------------------------------------------------------------------------------------
+#CONEXION Y EXTRACCION DE DATOS DEL SEGUNDO ENDPOINT(DATOS DE JUGADORES)------------------------------------------------------------------------------------------------------
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
