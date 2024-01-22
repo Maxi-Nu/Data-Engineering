@@ -78,60 +78,90 @@ try:
     #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     #CONEXION Y EXTRACCION DE DATOS DE SEGUNDA URL(DATOS DE PARTIDOS)--------------------------------------------------------------------------------------------------------
     #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    lista_par=[]
+    lista_estadios=[]
+    respuesta_par = requests.get(url2, params=params, headers=headers)
+    # Verifica si la solicitud fue exitosa (código de estado 200)
+    if respuesta_par.status_code == 200:
+        # Procesa la respuesta_par de la API
+        response_json_2 = json.loads(respuesta_par.text)
+        data_partidos= response_json_2['response']
+        print(len(data_partidos))
+        for j in range(len(data_partidos)):
+            #--------------------------------------------------------        
+            #PARTIDOS
+            id_partido=data_partidos[j]["fixture"]["id"]
+            referi=data_partidos[j]["fixture"]["referee"]
+            timezone=data_partidos[j]["fixture"]["timezone"]        
+            fecha=data_partidos[j]["fixture"]["date"] 
+            status_par=data_partidos[j]["fixture"]["status"]["long"] 
+            #-----
+            id_eq_local=data_partidos[j]["teams"]["home"]["id"]
+            eq_local_win=data_partidos[j]["teams"]["home"]["winner"]
+            eq_local_goles=data_partidos[j]["goals"]["home"]
+            #----
+            id_eq_visitante=data_partidos[j]["teams"]["away"]["id"]
+            eq_visitante_win=data_partidos[j]["teams"]["away"]["winner"]
+            eq_visitante_goles=data_partidos[j]["goals"]["away"]
+            #ESTADIOS
+            id_estadio=data_partidos[j]["fixture"]["venue"]["id"] 
+            nombre_estadio=data_partidos[j]["fixture"]["venue"]["name"]
+            ciudad=data_partidos[j]["fixture"]["venue"]["city"]
+            #--ESTADISTICAS
+            resultado_final_local=data_partidos[j]["score"]["fulltime"]["home"]
+            resultado_final_visitante=data_partidos[j]["score"]["fulltime"]["away"]
+            resultado_extratime_local=data_partidos[j]["score"]["extratime"]["home"]
+            resultado_extratime_visitante=data_partidos[j]["score"]["extratime"]["away"]
+            penales_local=data_partidos[j]["score"]["penalty"]["home"]
+            penales_visitante=data_partidos[j]["score"]["penalty"]["away"]
+            
+            #--------------------------------------------------------
+            # Datos de partidos
+            datos_partidos = {
+                'id_partido': id_partido,
+                'referi': referi,
+                'timezone': timezone,
+                'fecha': fecha,
+                'status_par': status_par,
+                'id_eq_local': id_eq_local,
+                'eq_local_win': eq_local_win,
+                'eq_local_goles': eq_local_goles,
+                'id_eq_visitante': id_eq_visitante,
+                'eq_visitante_win': eq_visitante_win,
+                'eq_visitante_goles': eq_visitante_goles,
+                'resultado_final_local': resultado_final_local,
+                'resultado_final_visitante': resultado_final_visitante,
+                'resultado_extratime_local': resultado_extratime_local,
+                'resultado_extratime_visitante': resultado_extratime_visitante,
+                'penales_local': penales_local,
+                'penales_visitante': penales_visitante
+            }
 
-  # lista_par=[]
-  #  respuesta_par = requests.get(url2, params=params, headers=headers)
-  #  # Verifica si la solicitud fue exitosa (código de estado 200)
-  #  if respuesta_par.status_code == 200:
-  #      # Procesa la respuesta_par de la API
-  #      response_json_2 = json.loads(respuesta_par.text)
-  #      data_partidos= response_json_2['response']
-  #      print(len(data_partidos))#20 es el total de equipos de la liga - se trae la lista y sus estadisticas actualizadas (partidos ganados-empatados-perdidos-puntos y posicion)
-  #      for j in (data_partidos):
-  #          #--------------------------------------------------------        
-  #          #PARTIDOS
-  #          id_partido=data_partidos[j]["fixture"]["id"]
-  #          referi=data_partidos[j]["fixture"]["referee"]
-  #          timezone=data_partidos[j]["fixture"]["timezone"]        
-  #          fecha=data_partidos[j]["fixture"]["date"] 
-  #          status_par=data_partidos[j]["fixture"]["status"]["long"] 
-  #          #-----
-  #          id_eq_local=data_partidos[j]["teams"]["home"]["id"]
-  #          eq_local_win=data_partidos[j]["teams"]["home"]["winner"]
-  #          eq_local_goles=data_partidos[j]["goals"]["home"]
-  #          #----
-  #          id_eq_visitante=data_partidos[j]["teams"]["away"]["id"]
-  #          eq_visitante_win=data_partidos[j]["teams"]["away"]["winner"]
-  #          eq_visitante_goles=data_partidos[j]["goals"]["away"]
-  #          #ESTADIOS
-  #          id_estadio=data_partidos[j]["fixture"]["venue"]["id"] 
-  #          nombre_estadio=data_partidos[j]["fixture"]["venue"]["name"]
-  #          ciudad=data_partidos[j]["fixture"]["venue"]["city"]
-  #          #--ESTADISTICAS
-  #          resultado_final_local=data_partidos[j]["score"]["fulltime"]["home"]
-  #          resultado_final_visitante=data_partidos[j]["score"]["fulltime"]["away"]
-  #          resultado_extratime_local=data_partidos[j]["score"]["extratime"]["home"]
-  #          resultado_extratime_visitante=data_partidos[j]["score"]["extratime"]["away"]
-  #          penales_local=data_partidos[j]["score"]["penalty"]["home"]
-  #          penales_visitante=data_partidos[j]["score"]["penalty"]["away"]
-  #          
-  #          #--------------------------------------------------------
-  #          dicc_par={"id_eq":id_eq,"name_eq":name_eq,"logo_eq":logo_eq,"puesto":puesto,"puntos":puntos,"part_jugados":part_jugados,"part_ganados":part_ganados,"part_empatados":part_empatados,
-  #                    "part_perdidos":part_perdidos,"goles_favor":goles_favor,"goles_contra":goles_contra,"fecha_actualizacion":fecha_actualizacion,'Fecha_ingesta':str(date)}
-  #          lista_par.append(dicc_par)
-  #          #fin del for
-#
-  #      df_partidos = pd.DataFrame(lista_par)
-#
-  #      #Dataframe a redshift
-  #      try:
-  #          df_partidos.to_sql('mxxn13_coderhouse.partidos_premier_league',conn,index=False,if_exists='replace')
-  #          print('Carga de datos de partidos completa correctamente.')
-  #      except:
-  #          print('Error en la carga de datos de partidos a Redshift.')
-  #  else:
-  #      # Muestra un mensaje de error si la solicitud no fue exitosa
-  #      print("Error en la solicitud de partidos. Código de estado:", respuesta_pos.status_code)
+            # Datos de estadios
+            datos_estadios = {
+                'id_estadio': id_estadio,
+                'nombre_estadio': nombre_estadio,
+                'ciudad': ciudad
+            }
+            lista_par.append(datos_partidos)
+            lista_estadios.append(datos_estadios)
+            #fin del for
+        df_partidos = pd.DataFrame(lista_par)
+        df_estadios= pd.DataFrame(lista_estadios).drop_duplicates(subset=['id_estadio', 'ciudad'])
+       #Dataframe a redshift
+        try:
+           df_partidos.to_sql('mxxn13_coderhouse.partidos_premier_league',conn,index=False,if_exists='replace')
+           print('Carga de datos de partidos completa correctamente.')
+        except:
+           print('Error en la carga de datos de partidos a Redshift.')
+        try:
+           df_estadios.to_sql('mxxn13_coderhouse.estadios_premier_league',conn,index=False,if_exists='replace')
+           print('Carga de datos de estadios completa correctamente.')
+        except:
+           print('Error en la carga de datos de estadios a Redshift.')
+    else:
+        # Muestra un mensaje de error si la solicitud no fue exitosa
+        print("Error en la solicitud de partidos y estadios. Código de estado:", respuesta_par.status_code)
 
 except requests.exceptions.RequestException as e:
     # Muestra un mensaje si hay un error en la solicitud
