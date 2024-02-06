@@ -2,11 +2,11 @@ import requests
 import pandas as pd
 import json
 import datetime
-from google.colab import userdata
+import keys
 from sqlalchemy import create_engine
 
 #CONEXION A REDSHIFT
-conn=create_engine(userdata.get('redshift_conn'))
+conn=create_engine(keys.redshift_conn)
 
 #DATOS PARA LA API
 date = datetime.date.today()
@@ -20,7 +20,7 @@ params = {'league': '39', 'season': year}
 
 headers = {
     'x-rapidapi-host': "v3.football.api-sports.io",
-    'x-rapidapi-key': userdata.get('api_key')
+    'x-rapidapi-key': keys.api_key
 }
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
