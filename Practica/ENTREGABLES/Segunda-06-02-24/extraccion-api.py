@@ -10,7 +10,7 @@ conn=create_engine(keys.redshift_conn)
 
 #DATOS PARA LA API
 date = datetime.date.today()
-year = int(date.strftime("%Y"))-1
+year = int(date.strftime("%Y"))-1 #SE DEBERIA HACER UN IF PARA QUE CONSIDERE SI ESTAMOS EN LA TEMPORADA ANTES DEL RECESO A MEDIO AÑO O DESPUES (DONDE CAMBIA DE AÑO AL AÑO ACTUAL) 
 print(f"Current Year -> {year}") #AÑO DE LA TEMPORADA A BUSCAR (TEMP ACTUAL 23-24 )
 
 url = "https://v3.football.api-sports.io/standings"
@@ -179,7 +179,8 @@ if respuesta_par.status_code == 200:
         datos_estadios = {
             'id_estadio': id_estadio,
             'nombre_estadio': nombre_estadio,
-            'ciudad': ciudad
+            'ciudad': ciudad,
+            'id_equipo':id_eq_local
         }
         lista_par.append(datos_partidos)
         lista_estadios.append(datos_estadios)
@@ -245,6 +246,7 @@ if respuesta_par.status_code == 200:
                         id_estadio INT,
                         nombre_estadio VARCHAR,
                         ciudad VARCHAR,
+                        id_equipo INT,
                         PRIMARY KEY (id_estadio)
                   );
                   """.format(table_name='mxxn13_coderhouse.estadios_premier_league')
