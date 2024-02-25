@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from email.policy import default
 from airflow import DAG
-from airflow.providers.postgres.operators.postgres import PostgresOperator
+from airflow.providers.amazon.aws.operators.redshift import RedshiftSQLOperator
 from airflow.operators.python_operator import PythonOperator
 
 default_args={
@@ -19,15 +19,15 @@ with DAG(
     catchup=False,
     ) as dag:
 
-    task1= PostgresOperator(
+    task1= RedshiftSQLOperator(
         task_id='crear_tablas_redshift',
-        postgres_conn_id= 'postgres_localhost',
-        sql="/querys/creacion_tablas_redshift.sql"
+        redshift_conn_id= 'redshift_localhost',
+        autocommit=True,
+        sql='/scripts/creacion_tablas_redshift.sql' 
     )
     '''
     task2 =PythonOperator(
     task_id='Extraccion y carga API',
     python_callable=lambda: subprocess.Popen(["/scripts/extraccion-api.py"]),
     )'''
-
 task1 #>> task2
