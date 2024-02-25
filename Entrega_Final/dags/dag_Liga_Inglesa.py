@@ -6,16 +6,16 @@ from airflow.operators.python_operator import PythonOperator
 
 default_args={
     'owner': 'Maximiliano_Nuñez',
-    'retries':5,
-    'retry_delay': timedelta(minutes=1)
+    'retries':15,
+    'retry_delay': timedelta(minutes=2)
 }
 
 with DAG(
     default_args=default_args,
     dag_id='dag_extraccion_api_futbol',
-    description= 'Nuestro primer dag usando python Operator',
+    description= 'Obtiene datos de temporada de la premier League',
     start_date=datetime(2024,2,20),
-    schedule_interval='@daily',
+    schedule_interval='@once',  #'@hourly',
     catchup=False,
     ) as dag:
 
@@ -24,10 +24,10 @@ with DAG(
         postgres_conn_id= 'postgres_localhost',
         sql="/querys/creacion_tablas_redshift.sql"
     )
+    '''
     task2 =PythonOperator(
     task_id='Extraccion y carga API',
-    python_callable='/scripts/extraccion-api.py',
-    op_args=["{{ ds }} {{ execution_date.hour }}"],  
-    )
+    python_callable=lambda: subprocess.Popen(["/scripts/extraccion-api.py"]),
+    )'''
 
-task1 >> task2
+task1 #>> task2
