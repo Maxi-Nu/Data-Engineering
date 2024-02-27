@@ -26,4 +26,8 @@ SEGUNDA ENTREGA
 TERCERA ENTREGA
 
     Se paso al sistema de entrega por GitHub : 
+    se cambio los create tables
+    se cambio el keys.py
+    se agrego keys a airflow ,explicar como crear
+    se crea tabla de scrips dentro de dags
     

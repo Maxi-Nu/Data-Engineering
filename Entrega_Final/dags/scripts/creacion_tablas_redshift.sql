@@ -5,10 +5,7 @@ CREATE TABLE IF NOT EXISTS mxxn13_coderhouse.estadios_premier_league
 	,ciudad VARCHAR(256)   ENCODE lzo
 	,PRIMARY KEY (id_estadio)
 )
-DISTSTYLE AUTO
 ;
-ALTER TABLE mxxn13_coderhouse.estadios_premier_league owner to mxxn13_coderhouse;
-
 CREATE TABLE IF NOT EXISTS mxxn13_coderhouse.partidos_premier_league
 (
 	id_partido INTEGER NOT NULL  ENCODE az64
@@ -30,10 +27,7 @@ CREATE TABLE IF NOT EXISTS mxxn13_coderhouse.partidos_premier_league
 	,penales_visitante INTEGER   ENCODE az64
 	,PRIMARY KEY (id_partido)
 )
-DISTSTYLE AUTO
 ;
-ALTER TABLE mxxn13_coderhouse.partidos_premier_league owner to mxxn13_coderhouse;
-
 CREATE TABLE IF NOT EXISTS mxxn13_coderhouse.posiciones_premier_league
 (
 	id_eq INTEGER NOT NULL  ENCODE az64
@@ -51,6 +45,4 @@ CREATE TABLE IF NOT EXISTS mxxn13_coderhouse.posiciones_premier_league
 	,fecha_ingesta VARCHAR(256)   ENCODE lzo
 	,PRIMARY KEY (id_eq, name_eq)
 )
-DISTSTYLE AUTO
 ;
-ALTER TABLE mxxn13_coderhouse.posiciones_premier_league owner to mxxn13_coderhouse;
