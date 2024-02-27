@@ -17,7 +17,7 @@ with DAG(
     dag_id='dag_extraccion_api_futbol',
     description= 'Obtiene datos de temporada de la premier League',
     start_date=datetime(2024,2,20),
-    schedule_interval='@once',  #'@hourly',
+    schedule_interval='@hourly',#'@daily',
     catchup=False,
     ) as dag:
     
@@ -84,7 +84,7 @@ with DAG(
                 """, 
     )
     task4= PythonOperator(
-    task_id='Ejecutar_API',
+    task_id='Ejecutar_API_ETL',
     python_callable=api_etl,
     op_kwargs={ 'redshift_conn':'{{var.value.redshift_conn}}',
                'api_key':'{{var.value.api_key}}'
