@@ -28,9 +28,10 @@ Para esta primera entrega se realizo la consulta a ambos endpoint guardando en 3
 
 ## Cambios:
   * Se subio todo el proyecto a Github para facilitar la entrega.
-  * Cambio en la creacion de las tablas: las tablas se creaban con una comprobacion previa al insertado de datos en la api , ahora se realiza la creacion y comprobacion de existencia de tablas antes en Tareas separadas para permitir el relanzamiento en caso de fallo . 
+  * Cambio en la creacion de las tablas: las tablas se creaban con una comprobacion previa al insertado de datos en la api , ahora se realiza la creacion y comprobacion de existencia de tablas antes en Task de airflow separadas para permitir el relanzamiento en caso de fallo . 
   * Eliminacion del archivo api.key donde se guardaban la key de la api y la conexion con sus credenciales a redshift , se opto por utilizar las variables del propio airflow para proporcionarlas.
-  * Se creo una carpeta de scripts dentro de la carpeta Entrega_Final\dags para poder ser llamada desde el dag y ejecutar el ETL de la API.
+  * Se creo una carpeta de scripts dentro de 'Entrega_Final\dags' para poder ejecutar el ETL de la API y los .sql .
+  * Se cambio la captura de errores del archivo ExtraccionApi.py para que ahora fuerce el error en las tareas de airflow(se cambio los prints por raise)
 
 ## Instrucciones: 
   * Ejecutar el docker-compose up 

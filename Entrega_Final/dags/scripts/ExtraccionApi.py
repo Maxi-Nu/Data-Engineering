@@ -2,7 +2,6 @@ import requests
 import pandas as pd
 import json
 import datetime
-#import scripts.keys as keys
 from sqlalchemy import create_engine
 
 def api_etl(redshift_conn,api_key):
@@ -67,7 +66,7 @@ def api_etl(redshift_conn,api_key):
             con.execute(truncate_sql)
           print('Tabla truncada exitosamente.')
         except Exception as e:
-          print('Error al truncar la tabla(posiciones_premier_league):', e)
+          raise ValueError('Error al truncar la tabla(posiciones_premier_league):', e)
 
         # Preparar los datos para la inserción en la tabla
 
@@ -81,11 +80,12 @@ def api_etl(redshift_conn,api_key):
             df_posiciones.to_sql('posiciones_premier_league', con, index=False, if_exists='append', method='multi',schema='mxxn13_coderhouse')
           print('Carga de posiciones completa.')
         except Exception as e:
-          print('Error en la carga de datos de posiciones a Redshift:', e)
+          raise ValueError('Error en la carga de datos de posiciones a Redshift:', e)
+          
 
     else:
         # Muestra un mensaje de error si la solicitud no fue exitosa
-        print("Error en la solicitud de posiciones. Código de estado:", respuesta_pos.status_code)
+        raise ValueError("Error en la solicitud de posiciones. Código de estado:", respuesta_pos.status_code)
 
     #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     #CONEXION Y EXTRACCION DE DATOS DE SEGUNDA URL(DATOS DE PARTIDOS)--------------------------------------------------------------------------------------------------------
@@ -169,7 +169,7 @@ def api_etl(redshift_conn,api_key):
             con.execute(truncate_sql)
           print('Tabla truncada exitosamente.')
         except Exception as e:
-          print('Error al truncar la tabla(partidos_premier_league):', e)
+          raise ValueError('Error al truncar la tabla(partidos_premier_league):', e)
 
         # Preparar los datos para la inserción en la tabla  
         df_partidos = pd.DataFrame(lista_par).drop_duplicates(subset=['id_partido']).dropna(subset=['id_partido']) 
@@ -180,7 +180,7 @@ def api_etl(redshift_conn,api_key):
                 df_partidos.to_sql('partidos_premier_league', con, index=False, if_exists='append', method='multi',schema='mxxn13_coderhouse')
             print('Carga de partidos completa.')
         except Exception as e:
-            print('Error en la carga de datos de partidos a Redshift:', e)
+            raise ValueError('Error en la carga de datos de partidos a Redshift:', e)
 
     #-------------------------------------------------------- #-------------------------------------------------------- #--------------------------------------------------------
         #CARGA DE ESTADIOS
@@ -192,7 +192,7 @@ def api_etl(redshift_conn,api_key):
             con.execute(truncate_sql)
           print('Tabla truncada exitosamente.')
         except Exception as e:
-          print('Error al truncar la tabla (estadios_premier_league):', e)
+          raise ValueError('Error al truncar la tabla (estadios_premier_league):', e)
 
         # Preparar los datos para la inserción en la tabla  
         df_estadios= pd.DataFrame(lista_estadios).drop_duplicates(subset=['id_estadio', 'ciudad']).dropna(subset=['id_estadio'])
@@ -203,8 +203,7 @@ def api_etl(redshift_conn,api_key):
                 df_estadios.to_sql('estadios_premier_league', con, index=False, if_exists='append', method='multi',schema='mxxn13_coderhouse')
             print('Carga de estadios completa.')
         except Exception as e:
-            print('Error en la carga de datos de estadios a Redshift:', e)
-
+           raise ValueError('Error en la carga de datos de estadios a Redshift:', e)
     else:
         # Muestra un mensaje de error si la solicitud no fue exitosa
-        print("Error en la solicitud de partidos y estadios. Código de estado:", respuesta_par.status_code)
+        raise ValueError("Error en la solicitud de partidos y estadios. Código de estado:", respuesta_par.status_code)     
