@@ -207,3 +207,4 @@ def api_etl(redshift_conn,api_key):
     else:
         # Muestra un mensaje de error si la solicitud no fue exitosa
         raise ValueError("Error en la solicitud de partidos y estadios. Código de estado:", respuesta_par.status_code)     
+    return '<h3>El proceso de extraccion finalizo correctamente.</h3>'
