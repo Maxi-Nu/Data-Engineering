@@ -51,16 +51,16 @@ Para esta primera entrega se realizo la consulta a ambos endpoint guardando en 3
 
 ## Instrucciones: 
   * Modificar el archivo airflow.cfg con lo siguiente en la seccion de:
-    -[smtp]
-    -smtp_host = smtp.gmail.com
-    -smtp_starttls = True
-    -smtp_ssl = False
-    -smtp_user = **su mail**
-    -smtp_password = **su contraseña de aplicacion**
-    -smtp_port = 25
-    -smtp_mail_from = avisos@airflow.com
-    -smtp_timeout = 30
-    -smtp_retry_limit = 5
+    - [smtp]
+    - smtp_host = smtp.gmail.com
+    - smtp_starttls = True
+    - smtp_ssl = False
+    - smtp_user = **su mail**
+    - smtp_password = **su contraseña de aplicacion**
+    - smtp_port = 25
+    - smtp_mail_from = avisos@airflow.com
+    - smtp_timeout = 30
+    - smtp_retry_limit = 5
 
   * Ejecutar el **docker-compose up** en la carpeta del proyecto (./Entrega_Final)
   * Una vez levantado el contenedor y teniendo airflow corriendo en localhost:8080 (Loguearse con user : airflow ,pass: airflow ) se debe ir a las opciones:
