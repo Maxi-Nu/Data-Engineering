@@ -38,3 +38,31 @@ Para esta primera entrega se realizo la consulta a ambos endpoint guardando en 3
   * Una vez levantado el contenedor y teniendo airflow corriendo en localhost:8080 (Loguearse con user : airflow ,pass: airflow ) se debe ir a las opciones:
     - Admin->Connections : creamos una conexion a redshift con las credenciales que se le va a pasar por privado.
     - Admin->Variables : creamos las 2 variables que necesita la api para correr, que se enviaran por privado.
+
+
+# ENTREGA FINAL
+
+## Cambios:
+
+  * Se utilizo Xcoms para obtener el resultado del proceso previo (Ejecutar_API_ETL) y determinar si el proceso finalizo o no correctamente.
+  * Se sumo el envio de mails en caso de fallo o exito al finalizar el DAG.
+  * Agregado del Dockerfile y airflow.cfg.
+  * Nueva variable que permite indicar el/los mail al cual se van a enviar los avisos. 
+
+## Instrucciones: 
+  * Modificar el archivo airflow.cfg con lo siguiente en la seccion de :
+          [smtp]
+          smtp_host = smtp.gmail.com
+          smtp_starttls = True
+          smtp_ssl = False
+          smtp_user = *su mail*
+          smtp_password = *su contraseña de aplicacion*
+          smtp_port = 25
+          smtp_mail_from = avisos@airflow.com
+          smtp_timeout = 30
+          smtp_retry_limit = 5
+
+  * Ejecutar el *docker-compose up* en la carpeta del proyecto (./Entrega_Final)
+  * Una vez levantado el contenedor y teniendo airflow corriendo en localhost:8080 (Loguearse con user : airflow ,pass: airflow ) se debe ir a las opciones:
+    - Admin->Connections : creamos una conexion a redshift con las credenciales que se le va a pasar por privado.
+    - Admin->Variables : creamos las 2 variables que necesita la api para correr, que se enviaran por privado.

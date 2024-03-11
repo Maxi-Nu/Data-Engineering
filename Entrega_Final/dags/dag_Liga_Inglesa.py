@@ -7,12 +7,17 @@ from airflow.operators.email import EmailOperator
 from scripts.ExtraccionApi import api_etl
 from airflow.models import Variable
 
+try:
+   mail=Variable.get('mail_alert')
+except:
+    mail=' '
+    
 default_args={
     'owner': 'Maximiliano_Nuñez',
-    'retries':0,
+    'retries':3,
     'retry_delay': timedelta(minutes=2),
     'email_on_failure': True,
-    'email': Variable.get('mail_alert')
+    'email': mail
 }
 
 with DAG(
